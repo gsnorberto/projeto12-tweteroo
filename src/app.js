@@ -22,8 +22,7 @@ let users = [
 let tweets = [
     {
         username: "bobesponja",
-        tweet: "eu amo o hub",
-        avatar: "https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info"
+        tweet: "eu amo o hub"
     }
 ];
 
@@ -50,7 +49,7 @@ app.post('/tweets', (req, res) => {
     let user = users.find(u => u.username === username);
 
     if(user){
-        tweets.push({username, tweet, avatar: user.avatar})
+        tweets.push({username, tweet})
         res.status(200).send("OK");
     } else { // Usuário não fez sign-up
         res.status(401).send("UNAUTHORIZED");
@@ -60,10 +59,17 @@ app.post('/tweets', (req, res) => {
 // TWEETS - GET
 app.get('/tweets', (req, res) => {
     if(tweets.length > 10){ // Envia apenas os 10 últimos tweets
-        let lastTweets = tweets.slice(tweets.length - 10, tweets.length) 
+        let lastTweets = tweets.slice(tweets.length - 10, tweets.length);
+
+        lastTweets.forEach(tweet => tweet.avatar = users.find(user => user.username === tweet.username).avatar )
+
         res.json(lastTweets);
     } else {
-        res.json(tweets);
+        let tweetsWithAvatar = [...tweets];
+
+        tweetsWithAvatar.forEach(tweet => tweet.avatar = users.find(user => user.username === tweet.username).avatar )
+
+        res.json(tweetsWithAvatar);
     }
 });
 
