@@ -12,12 +12,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Cors
 app.use(cors());
 
-let user = {
-    userName: '',
-    avatarUrl: ''
-}
+let user = [
+    {
+        userName: 'bobesponja',
+        avatarUrl: 'https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info'
+    }
+]
 
-let tweets = [];
+let tweets = [
+    {
+        username: "bobesponja",
+        tweet: "eu amo o hub",
+        avatar: "https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info"
+    }
+];
 
 app.get('/', (req, res) => {
     res.send('Hello World');
@@ -27,14 +35,11 @@ app.get('/', (req, res) => {
 app.post('/sign-up', (req, res) => {
     let { username, avatar } = req.body;
 
-    console.log(req.body);
-
     if (username !== '' && avatar !== '') {
-        user.userName = username;
-        user.avatarUrl = avatar;
-        res.status(200);
+        user.push({userName: username, avatarUrl: avatar});
+        res.status(200).json(req.body);
     } else {
-        res.status(401).send("Dados inválidos!");
+        res.status(401).send("UNAUTHORIZED");
     }
 });
 
@@ -45,7 +50,7 @@ app.post('/tweets', (req, res) => {
 
 // TWEETS - GET
 app.get('/tweets', (req, res) => {
-
+    res.json(tweets);
 });
 
 let PORT = 5000;
