@@ -50,7 +50,12 @@ app.post('/tweets', (req, res) => {
 
 // TWEETS - GET
 app.get('/tweets', (req, res) => {
-    res.json(tweets);
+    if(tweets.length > 10){ // Envia apenas os 10 últimos tweets
+        let lastTweets = tweets.slice(tweets.length - 10, tweets.length) 
+        res.json(lastTweets);
+    } else {
+        res.json(tweets);
+    }
 });
 
 let PORT = 5000;
