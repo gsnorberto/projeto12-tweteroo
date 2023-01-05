@@ -12,10 +12,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Cors
 app.use(cors());
 
-let user = [
+let users = [
     {
-        userName: 'bobesponja',
-        avatarUrl: 'https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info'
+        username: 'bobesponja',
+        avatar: 'https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info'
     }
 ]
 
@@ -36,16 +36,25 @@ app.post('/sign-up', (req, res) => {
     let { username, avatar } = req.body;
 
     if (username !== '' && avatar !== '') {
-        user.push({userName: username, avatarUrl: avatar});
-        res.status(200).json(req.body);
+        users.push({ username, avatar });
+        res.status(200).send("OK");
     } else {
-        res.status(401).send("UNAUTHORIZED");
+        res.status(401).send("Dados inválidos!");
     }
 });
 
 // TWEETS - POST
 app.post('/tweets', (req, res) => {
+    let { username, tweet } = req.body;
 
+    let user = users.find(u => u.username === username);
+
+    if(user){
+        tweets.push({username, tweet, avatar: user.avatar})
+        res.status(200).send("OK");
+    } else { // Usuário não fez sign-up
+        res.status(401).send("UNAUTHORIZED");
+    }
 });
 
 // TWEETS - GET
