@@ -1,30 +1,18 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import cors from 'cors';
 
 //App
 const app = express();
 
 // BodyParser settings
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Cors
 app.use(cors());
 
-let users = [
-    {
-        username: 'bobesponja',
-        avatar: 'https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info'
-    }
-]
+let users = []
 
-let tweets = [
-    {
-        username: "bobesponja",
-        tweet: "eu amo o hub"
-    }
-];
+let tweets = [];
 
 app.get('/', (req, res) => {
     res.send('Hello World');
@@ -36,9 +24,9 @@ app.post('/sign-up', (req, res) => {
 
     if (username !== '' && avatar !== '') {
         users.push({ username, avatar });
-        res.status(200).send("OK");
+        res.sendStatus(200);
     } else {
-        res.status(401).send("Dados inválidos!");
+        res.sendStatus(401);
     }
 });
 
@@ -48,11 +36,13 @@ app.post('/tweets', (req, res) => {
 
     let user = users.find(u => u.username === username);
 
-    if(user){
+    if(tweet === ''){
+        res.status(401).send("Há campos vazios");
+    } else if(user){
         tweets.push({username, tweet})
-        res.status(200).send("OK");
+        res.sendStatus(200);
     } else { // Usuário não fez sign-up
-        res.status(401).send("UNAUTHORIZED");
+        res.send(401).send("UNAUTHORIZED");
     }
 });
 
