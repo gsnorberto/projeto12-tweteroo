@@ -6,7 +6,8 @@ import tweetsRoute from './tweetsRoute.js';
 const app = express();
 
 // Settings
-app.use(express.json());
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 // Cors
 app.use(cors());
