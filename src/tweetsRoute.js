@@ -18,10 +18,10 @@ router.post('/sign-up', (req, res) => {
     }
 
     // User already registered
-    let registeredUser = users.find(user => user.username === username)
-    if (registeredUser) {
-        return res.status(409).send("Usuário já cadastrado!");
-    }
+    // let registeredUser = users.find(user => user.username === username)
+    // if (registeredUser) {
+    //     return res.status(409).send("Usuário já cadastrado!");
+    // }
 
     // Save user
     users.push({ username, avatar });
