@@ -15,6 +15,10 @@ router.post('/sign-up', (req, res) => {
     // There are empty fields
     if (!username || !avatar) {
         return res.status(400).send("Todos os campos são obrigatórios!");
+    } 
+    // check if username contains numeric caracteres
+    else if (strContainsNumber(username)){
+        return res.status(400).send("Há caracteres inválidos!");
     }
 
     // User already registered
@@ -30,6 +34,11 @@ router.post('/sign-up', (req, res) => {
     res.status(201).send("OK");
 });
 
+// CHECK IF A STRING CONTAINS NUMBERS
+function strContainsNumber(str) {
+    return /\d/.test(str);
+}
+
 // TWEETS - POST
 router.post('/tweets', (req, res) => {
     let username = req.headers.user;
@@ -38,6 +47,10 @@ router.post('/tweets', (req, res) => {
     // There are empty fields
     if (!username || !tweet) {
         return res.status(400).send("Todos os campos são obrigatórios!");
+    }
+    // check if username or tweet contains numeric caracteres
+    else if (strContainsNumber(username) || strContainsNumber(tweet)){
+        return res.status(400).send("Há caracteres inválidos!");
     }
 
     // User not authenticated
