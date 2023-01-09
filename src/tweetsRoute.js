@@ -5,7 +5,7 @@ let users = []; // [{ username, avatar }]
 let tweets = []; // [{ username, tweet }]
 
 router.get('/', (req, res) => {
-    res.send("Hello World!");
+    res.send("Tweteroo");
 })
 
 // SIGN UP - POST
@@ -23,8 +23,11 @@ router.post('/sign-up', (req, res) => {
         return res.status(409).send("Usuário já cadastrado!");
     }
 
+    // Save user
     users.push({ username, avatar });
-    res.status(201).json({ username, avatar });
+
+    // Response
+    res.status(201).send("OK");
 });
 
 // TWEETS - POST
@@ -37,25 +40,30 @@ router.post('/tweets', (req, res) => {
         return res.status(400).send("Todos os campos são obrigatórios!");
     }
 
+    // User not authenticated
     let user = users.find(u => u.username === username);
     if (!user) {
-        return res.sendStatus(401);
+        return res.sendStatus(401); // unauthorized
     }
 
+    // Save tweet
     tweets.push({ username, tweet })
 
-    return res.status(201).json({ username, tweet });
+    // Response
+    return res.status(201).send("OK");
 });
 
 // TWEETS - GET - WITH PAGINATION
 router.get('/tweets', (req, res) => {
     let page = parseInt(req.query.page);
 
-    if (!page && page <= 0) { // Invalid page number
+    // Invalid page number
+    if (page && page <= 0) { 
         return res.status(400).send('Informe uma página válida!');
     }
 
-    if (tweets.length > 10) { // Envia apenas os 10 últimos tweets
+    // Sends only the last 10 tweets
+    if (tweets.length > 10) {
         let tweetsWithAvatar;
 
         if (!page) { // without pagination
@@ -85,7 +93,6 @@ router.get('/tweets', (req, res) => {
         } else {
             return res.status(400).send('Informe uma página válida!');
         }
-
     }
 });
 
@@ -93,15 +100,18 @@ router.get('/tweets', (req, res) => {
 router.get('/tweets/:USERNAME', (req, res) => {
     let { USERNAME } = req.params;
 
+    // Check if user is authenticated
     let user = users.find(u => u.username === USERNAME);
     if (!user) {
         return res.sendStatus(404); // user not found
     }
 
+    // filter tweets by username and add tweet avatar
     let userTweets = tweets.filter(tweet => tweet.username === USERNAME);
     let tweetsWithAvatar = [...userTweets];
-
     tweetsWithAvatar.forEach(tweet => tweet.avatar = user.avatar)
+
+    // response
     res.json(tweetsWithAvatar);
 });
 
